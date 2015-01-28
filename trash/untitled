@@ -1,0 +1,12 @@
+Rails.application.config.middleware.use OmniAuth::Builder do
+  provider :google_oauth2, Rails.application.secrets.omniauth_provider_key, Rails.application.secrets.omniauth_provider_secret
+end
+
+provider :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"]
+
+
+
+export GOOGLE_CLIENT_ID=505783487987-164iso89isfffuu01ugh6ejoi1eiq0r6.apps.googleusercontent.com
+export GOOGLE_CLIENT_SECRET=bcCF6svSFt5h27QOvtcpJCEN
+
+heroku config:add OMNIAUTH_PROVIDER_KEY='505783487987-j2qtb23l9ndf7tsc1nom0vu5rpnu8jph.apps.googleusercontent.com' OMNIAUTH_PROVIDER_SECRET='kdlHt-g2BuZehVYXA0ar7giF'
