@@ -1,3 +1,7 @@
+<% 
+require 'json' 
+require 'digest'
+%>
 <!DOCTYPE html>
 <html class="html">
 <head>
@@ -8,7 +12,11 @@
 	    uri = URI.parse(ENV["REDISCLOUD_URL"])
 	    redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
 
-	    redis.set('test', 'test')
+	    if not redis.exists(request.ip)
+	    	redis.set(
+	    		Digest::SHA256.hexdigest(request.session["user_id"].to_s << Time.now.strftime("%I:%Mp").to_s), 
+	    		Time.now.strftime("%I:%Mp").to_s + ": " + User.where(id: request.session["user_id"]).first.name + ', ' + request.ip + ', ' + request["controller"] + ', ' + request.fullpath)
+	    end 
 
 	end
 %>
@@ -24,11 +32,12 @@
 </head>
 <body>
 
-	<%= 
-		if ENV["RAILS_ENV"] == 'production' 
-			redis.get('test') 
-		end
+	<% 
+		#if ENV["RAILS_ENV"] == 'production' 
+		#	redis.get('test') 
+		#end
 	%>
+
 	<%= yield %>
 
 
