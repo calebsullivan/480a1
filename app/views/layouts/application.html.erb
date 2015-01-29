@@ -18,7 +18,7 @@ require 'digest'
 	if ENV["RAILS_ENV"] == 'production'
 
 	    uri = URI.parse(ENV["REDISCLOUD_URL"])
-	    redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+	    redis = $redis
 
 	    if not redis.exists(request.ip)
 	    	redis.set(
