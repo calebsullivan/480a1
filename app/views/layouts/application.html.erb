@@ -17,14 +17,19 @@ require 'digest'
 
 	if ENV["RAILS_ENV"] == 'production'
 
-	    uri = URI.parse(ENV["REDISCLOUD_URL"])
+		uri = URI.parse(ENV["REDISCLOUD_URL"])
+		$redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+	    
 	    redis = $redis
+
 
 	    if not redis.exists(request.ip)
 	    	redis.set(
 	    		Digest::SHA256.hexdigest(request.session["user_id"].to_s << Time.now.strftime("%I:%Mp").to_s), 
 	    		Time.now.strftime("%I:%Mp").to_s + ": " + $name + ', ' + request.ip + ', ' + request["controller"] + ', ' + request.fullpath)
 	    end 
+
+	    redis.quit
 
 	end
 %>
