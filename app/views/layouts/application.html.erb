@@ -7,6 +7,14 @@ require 'digest'
 <head>
   <title>480 A1</title>
 <%
+	$unauth = request.session["user_id"] === nil
+
+	if not $unauth
+		$name = User.where(id: request.session["user_id"]).first.name
+	else
+		$name = "anon"
+	end
+
 	if ENV["RAILS_ENV"] == 'production'
 
 	    uri = URI.parse(ENV["REDISCLOUD_URL"])
@@ -15,7 +23,7 @@ require 'digest'
 	    if not redis.exists(request.ip)
 	    	redis.set(
 	    		Digest::SHA256.hexdigest(request.session["user_id"].to_s << Time.now.strftime("%I:%Mp").to_s), 
-	    		Time.now.strftime("%I:%Mp").to_s + ": " + User.where(id: request.session["user_id"]).first.name + ', ' + request.ip + ', ' + request["controller"] + ', ' + request.fullpath)
+	    		Time.now.strftime("%I:%Mp").to_s + ": " + $name + ', ' + request.ip + ', ' + request["controller"] + ', ' + request.fullpath)
 	    end 
 
 	end
@@ -31,15 +39,12 @@ require 'digest'
 
 </head>
 <body>
-
 	<% 
 		#if ENV["RAILS_ENV"] == 'production' 
 		#	redis.get('test') 
 		#end
 	%>
-
+	<span>Signed in as <%= $name %></span>
 	<%= yield %>
-
-
 </body>
 </html>

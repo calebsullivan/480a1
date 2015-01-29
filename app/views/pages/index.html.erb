@@ -1,2 +1,26 @@
 
+
+<% $unauth = request.session["user_id"] === nil
+
+	if not $unauth
+		$name = User.where(id: request.session["user_id"]).first.name
+	else
+		$name = "anon"
+	end
+
+%>
+
+
+<% if $unauth %>
+
 <h1> Sign in with <a href="/signin">Google</a> </h1>
+
+<% else %>
+
+<h1> Welcome, <%= $name %> </h1>
+
+<h2><a href = "/maps">Maps</a></h2>
+
+<h2><a href = "/books">Books</a></h2>
+
+<% end %>

@@ -14,8 +14,9 @@ gem 'omniauth-google-oauth2'
 gem 'simple_form'
 gem 'redis'
 
-group :development do
   gem 'better_errors'
+  
+group :development do
   gem 'binding_of_caller', :platforms=>[:mri_20]
   gem 'quiet_assets'
   gem 'rails_layout'
